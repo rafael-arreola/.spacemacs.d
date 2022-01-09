@@ -27,7 +27,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-ask-for-lazy-installation t
 
    ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
+   ;; Paths must have a trailing slash (i.e. `~/.spacemacs.d/layers')
    dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
@@ -38,33 +38,43 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ;; better-defaults
-     auto-completion
-     emacs-lisp
-     git
-     helm
      ;; lsp
      ;; markdown
      ;(multiple-cursors :variables multiple-cursors-backend 'evil-mc)
-     ;; org
-     ;; (shell :variables
+     ;; org     ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; version-control
+     git
+     lsp
+     helm
+     auto-completion
+     ;;better-defaults
+     emacs-lisp
      syntax-checking
-     (treemacs :variables treemacs-use-filewatch-mode t)
-
+     themes-megapack
+     (neotree :variables neo-window-position 'right)
      ;; frameworks
-     react
+     ;;react
      go
      sql
      php
      rust
      yaml
+     json
+     html
+     prettier
      (elixir :variables elixir-backend 'alchemist)
-     javascript
-     (typescript :variables typescript-fmt-on-save t)
+     (javascript :variables
+                 javascript-backend 'lsp
+                 javascript-fmt-tool 'prettier
+                 javascript-fmt-on-save t
+                 node-add-modules-path t)
+     (typescript :variables
+                 javascript-backend 'lsp
+                 typescript-fmt-tool 'prettier
+                 typescript-linter 'eslint
+                 typescript-fmt-on-save t)
      )
 
 
@@ -233,7 +243,9 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(inkpot
+                         alect-black
+                         spacemacs-dark
                          spacemacs-light)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -557,6 +569,13 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+  (setq inhibit-startup-screen t
+        treemacs-position 'right
+        tide-format-option '(:convertTabsToSpaces t :tabSize 2 :indentSize 2)
+        create-lockfiles nil)
+
   (setq-default
    ;; js2-mode
    js2-indent-level 2
@@ -566,7 +585,10 @@ before packages are loaded."
    web-mode-markup-indent-offset 2
    web-mode-css-indent-offset 2
    web-mode-code-indent-offset 2
-   web-mode-attr-indent-offset 2)
+   web-mode-attr-indent-offset 2
+   ;; typescript
+   typescript-indent-level 2
+   )
 
   (with-eval-after-load 'web-mode
     (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
@@ -574,8 +596,16 @@ before packages are loaded."
     (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
     (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
     )
+
 )
 
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+)
+
